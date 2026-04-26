@@ -577,4 +577,11 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     
-    bot.infinity_polling(skip_pending=True, timeout=30, long_polling_timeout=30)
+        while True:
+        try:
+            print("Starting polling...")
+            bot.infinity_polling(skip_pending=True, timeout=60, long_polling_timeout=60)
+        except Exception as e:
+            print(f"Polling crashed: {e}. Restarting in 15sec...")
+            time.sleep(15)
+            continue
