@@ -549,11 +549,16 @@ Time: {get_eat_time()}""")
 
 # ===== START BOT =====
 if __name__ == "__main__":
+    import sys
     print("Denverlyk Ultra v5.4 Starting - 1 Scan/Day Limit")
     
-    # Kill any existing webhook/polling before starting
-    bot.remove_webhook()
-    time.sleep(1)
+    try:
+        bot.remove_webhook()
+        time.sleep(2)
+        bot.stop_polling()
+        time.sleep(2)
+    except:
+        pass
     
     scanner_thread = threading.Thread(target=auto_scanner, daemon=True)
     scanner_thread.start()
@@ -562,4 +567,8 @@ if __name__ == "__main__":
     scheduler_thread.start()
     print("Auto-scheduler started - Active: 10:00-13:30, 15:30-22:00 EAT Mon-Fri")
     
-    bot.infinity_polling(skip_pending=True, timeout=20)
+    try:
+        bot.infinity_polling(skip_pending=True, timeout=20, long_polling_timeout=20)
+    except Exception as e:
+        print(f"Bot crashed: {e}")
+        sys.exit(1)
