@@ -549,15 +549,11 @@ Time: {get_eat_time()}""")
 
 # ===== START BOT =====
 if __name__ == "__main__":
-    import sys, signal
     print("Denverlyk Ultra v5.4 Starting - 1 Scan/Day Limit")
     
-    # Force kill any existing sessions
     try:
         bot.delete_webhook(drop_pending_updates=True)
         time.sleep(3)
-        bot.stop_polling()
-        time.sleep(2)
     except Exception as e:
         print(f"Cleanup error: {e}")
     
@@ -568,16 +564,8 @@ if __name__ == "__main__":
     scheduler_thread.start()
     print("Auto-scheduler started - Active: 10:00-13:30, 15:30-22:00 EAT Mon-Fri")
     
-    # Handle shutdown signals
-    def signal_handler(sig, frame):
-        print('Shutting down bot...')
-        bot.stop_polling()
-        sys.exit(0)
-    
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-    
-        while True:
+    # This while loop must be indented 4 spaces from the left
+    while True:
         try:
             print("Starting polling...")
             bot.infinity_polling(skip_pending=True, timeout=60, long_polling_timeout=60)
