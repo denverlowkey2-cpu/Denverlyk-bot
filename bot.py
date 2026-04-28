@@ -747,7 +747,7 @@ Signals: {DAILY_SIGNALS_SENT}/{MAX_DAILY_SIGNALS}
 Cache: {len(CANDLE_DB)} pairs
 Maintenance: {'🔴 ON' if MAINTENANCE_MODE else '🟢 OFF'}
 News Block: {'🔴 ON' if MANUAL_NEWS_BLOCK else '🟢 OFF'}
-""", call.message.chat.id, call.message.message_id, reply_markup=get)_admin_menu())
+""", call.message.chat.id, call.message.message_id, reply_markup=get)_admin_menu()
         elif action == 'news':
         MANUAL_NEWS_BLOCK = not MANUAL_NEWS_BLOCK
         status = "🔴 ON" if MANUAL_NEWS_BLOCK else "🟢 OFF"
