@@ -854,29 +854,26 @@ def news_block_cmd(message):
     bot.reply_to(message, f"📰 Manual News Block: {status}")
 
 def run_bot():
-    while True:
-        try:
-            # Kill webhook + clear old updates before polling
-            bot.remove_webhook()
-            bot.delete_webhook() 
-            time.sleep(1)  # Let Telegram process it
-            
-            print(f"Bot online: @{bot.get_me().username}")
-            print(f"Admin: {ADMIN_ID}")
-            print("Safety: Max 10 trades/user/day | ATR SL/TP")
-            print("Denverlyk V3.4 PICK-A-PAIR Starting...")
-            print("Scan: User-triggered | 60s cooldown")
-            print(f"TwelveData: {'SET' if TWELVE_API_KEY else 'NOT SET'}...")
-            
-            # skip_pending=True prevents threading conflict
-            bot.infinity_polling(skip_pending=True, timeout=60, long_polling_timeout=60)
-            
-        except Exception as e:
-            print(f"Bot crashed: {e}")
-            time.sleep(15)
+    try:
+        # Kill webhook + clear old updates before polling
+        bot.remove_webhook()
+        bot.delete_webhook(drop_pending_updates=True)
+        time.sleep(2)
+        
+        print(f"Bot online: @{bot.get_me().username}")
+        print(f"Admin: {ADMIN_ID}")
+        print("Safety: Max 10 trades/user/day | ATR SL/TP")
+        print("Denverlyk V3.4 PICK-A-PAIR Starting...")
+        print("Scan: User-triggered | 60s cooldown")
+        print(f"TwelveData: {'SET' if TWELVE_API_KEY else 'NOT SET'}...")
+        
+        # none_stop=True + skip_pending=True = single thread only
+        bot.infinity_polling(none_stop=True, skip_pending=True, timeout=60)
+        
+    except Exception as e:
+        print(f"Fatal error: {e}")
+        time.sleep(15)
 
 if __name__ == "__main__":
     reset_daily_counters()
-    print(f"Bot online: @{bot.get_me().username}")
-    print(f"Admin: {ADMIN_ID}")
     run_bot()
