@@ -691,6 +691,7 @@ def ban_user_cmd(message):
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('admin_'))
 def admin_panel_callback(call):
+    global MANUAL_NEWS_BLOCK, MAINTENANCE_MODE
     if call.from_user.id!= ADMIN_ID:
         bot.answer_callback_query(call.id, "Admin only")
         return
@@ -748,8 +749,7 @@ Interval: {SCAN_INTERVAL}s
 Maintenance: {'🔴 ON' if MAINTENANCE_MODE else '🟢 OFF'}
 News Block: {'🔴 ON' if MANUAL_NEWS_BLOCK else '🟢 OFF'}
 """, call.message.chat.id, call.message.message_id, reply_markup=get_admin_menu())
-    elif action == 'news':
-        global MANUAL_NEWS_BLOCK
+        elif action == 'news':
         MANUAL_NEWS_BLOCK = not MANUAL_NEWS_BLOCK
         status = "🔴 ON" if MANUAL_NEWS_BLOCK else "🟢 OFF"
         bot.answer_callback_query(call.id, f"News Block: {status}")
