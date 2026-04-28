@@ -740,16 +740,16 @@ Maintenance: {'🔴 ON' if MAINTENANCE_MODE else '🟢 OFF'}
     elif action == 'api':
         bot.edit_message_text(f"""
 📊 *Admin Panel*
-        
+
 Users: {total_users} | Active: {len(ACTIVE_DB)} pairs
 Maintenance: {'🔴 ON' if MAINTENANCE_MODE else '🟢 OFF'}
 News Block: {'🔴 ON' if MANUAL_NEWS_BLOCK else '🟢 OFF'}
         """, call.message.chat.id, call.message.message_id, reply_markup=get_admin_menu())
-        elif action == 'news':
+    elif action == 'news':
         MANUAL_NEWS_BLOCK = not MANUAL_NEWS_BLOCK
         status = "🔴 ON" if MANUAL_NEWS_BLOCK else "🟢 OFF"
         bot.answer_callback_query(call.id, f"News Block: {status}")
-        bot.edit_message_text(f"📰 News Block: {status}", call.message.chat.id, call.message.message_id, reply_markup=get_admin_menu())
+        bot.edit_message_text(f"📵 News Block: {status}", call.message.chat.id, call.message.message_id, reply_markup=get_admin_menu())        
     elif action == 'kill':
         MAINTENANCE_MODE = not MAINTENANCE_MODE
         status = "🔴 ON" if MAINTENANCE_MODE else "🟢 OFF"
