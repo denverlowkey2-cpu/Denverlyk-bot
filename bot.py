@@ -856,14 +856,21 @@ def news_block_cmd(message):
 def run_bot():
     while True:
         try:
-            bot.delete_webhook()  # ← Kills any webhook conflict
+            # Kill webhook + clear old updates before polling
+            bot.remove_webhook()
+            bot.delete_webhook() 
+            time.sleep(1)  # Let Telegram process it
+            
             print(f"Bot online: @{bot.get_me().username}")
             print(f"Admin: {ADMIN_ID}")
             print("Safety: Max 10 trades/user/day | ATR SL/TP")
             print("Denverlyk V3.4 PICK-A-PAIR Starting...")
             print("Scan: User-triggered | 60s cooldown")
             print(f"TwelveData: {'SET' if TWELVE_API_KEY else 'NOT SET'}...")
-            bot.infinity_polling(timeout=60, long_polling_timeout=60)
+            
+            # skip_pending=True prevents threading conflict
+            bot.infinity_polling(skip_pending=True, timeout=60, long_polling_timeout=60)
+            
         except Exception as e:
             print(f"Bot crashed: {e}")
             time.sleep(15)
