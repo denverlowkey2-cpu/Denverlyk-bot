@@ -856,16 +856,16 @@ def news_block_cmd(message):
 def run_bot():
     while True:
         try:
-            print("🚀 Denverlyk V3.4 PICK-A-PAIR Starting...")
-            print(f"⚡ Scan: User-triggered | {SCAN_INTERVAL}s cooldown")
-            print(f"📊 API Budget: {DAILY_LIMIT}/day")
-            print(f"💰 M-Pesa: {MPESA_NUMBER}")
-            print(f"🔑 TwelveData: {TWELVEDATA_API_KEY[:8] if TWELVEDATA_API_KEY else 'NOT SET'}...")
-            print(f"🛡️ Safety: Max {MAX_TRADES_PER_USER} trades/user/day | ATR SL/TP")
+            bot.delete_webhook()  # ← Kills any webhook conflict
+            print(f"Bot online: @{bot.get_me().username}")
+            print(f"Admin: {ADMIN_ID}")
+            print("Safety: Max 10 trades/user/day | ATR SL/TP")
+            print("Denverlyk V3.4 PICK-A-PAIR Starting...")
+            print("Scan: User-triggered | 60s cooldown")
+            print(f"TwelveData: {'SET' if TWELVE_API_KEY else 'NOT SET'}...")
             bot.infinity_polling(timeout=60, long_polling_timeout=60)
         except Exception as e:
             print(f"Bot crashed: {e}")
-            traceback.print_exc()
             time.sleep(15)
 
 if __name__ == "__main__":
