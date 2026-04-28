@@ -13,7 +13,7 @@ import traceback
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 ADMIN_ID = int(os.environ.get('ADMIN_ID', 0))
 MPESA_NUMBER = os.environ.get('MPESA_NUMBER', '0712345678')
-TWELVEDATA_API_KEY = os.environ.get('TWELVEDATA_API_KEY')
+TWELVE_API_KEY = os.environ.get('TWELVE_API_KEY')
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
