@@ -875,4 +875,4 @@ def run_bot():
 
 if __name__ == "__main__":
     reset_daily_counters()
-    run_bot()
+    run_bot() #
