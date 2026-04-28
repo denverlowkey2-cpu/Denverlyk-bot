@@ -732,6 +732,9 @@ def ban_user_cmd(message):
 def admin_panel_callback(call):
     global MANUAL_NEWS_BLOCK, MAINTENANCE_MODE
     if call.from_user.id!= ADMIN_ID:
+        bot.answer_callback_query(call.id, "Admin only")
+        return
+    action = call.data.split('_')[1]
 
 # === ADMIN COMMANDS ===
 @bot.message_handler(commands=['adduser'])
