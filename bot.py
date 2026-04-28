@@ -870,4 +870,6 @@ def run_bot():
 
 if __name__ == "__main__":
     reset_daily_counters()
-    run_bot() #
+    print(f"Bot online: @{bot.get_me().username}")
+    print(f"Admin: {ADMIN_ID}")
+    run_bot()
