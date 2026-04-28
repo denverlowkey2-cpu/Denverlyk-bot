@@ -745,7 +745,6 @@ Used: {API_CALL_COUNT}/{DAILY_LIMIT}
 Left: {DAILY_LIMIT - API_CALL_COUNT}
 Signals: {DAILY_SIGNALS_SENT}/{MAX_DAILY_SIGNALS}
 Cache: {len(CANDLE_DB)} pairs
-Interval: {SCAN_INTERVAL}s
 Maintenance: {'🔴 ON' if MAINTENANCE_MODE else '🟢 OFF'}
 News Block: {'🔴 ON' if MANUAL_NEWS_BLOCK else '🟢 OFF'}
 """, call.message.chat.id, call.message.message_id, reply_markup=get_admin_menu())
