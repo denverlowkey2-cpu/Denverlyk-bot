@@ -739,15 +739,12 @@ Maintenance: {'🔴 ON' if MAINTENANCE_MODE else '🟢 OFF'}
         bot.edit_message_text("📢 Send: `/broadcast your message here`", call.message.chat.id, call.message.message_id)
     elif action == 'api':
         bot.edit_message_text(f"""
-📊 **API STATUS**
-
-Used: {API_CALL_COUNT}/{DAILY_LIMIT}
-Left: {DAILY_LIMIT - API_CALL_COUNT}
-Signals: {DAILY_SIGNALS_SENT}/{MAX_DAILY_SIGNALS}
-Cache: {len(CANDLE_DB)} pairs
+📊 *Admin Panel*
+        
+Users: {total_users} | Active: {len(ACTIVE_DB)} pairs
 Maintenance: {'🔴 ON' if MAINTENANCE_MODE else '🟢 OFF'}
 News Block: {'🔴 ON' if MANUAL_NEWS_BLOCK else '🟢 OFF'}
-""", call.message.chat.id, call.message.message_id, reply_markup=get_admin_menu()
+        """, call.message.chat.id, call.message.message_id, reply_markup=get_admin_menu())
         elif action == 'news':
         MANUAL_NEWS_BLOCK = not MANUAL_NEWS_BLOCK
         status = "🔴 ON" if MANUAL_NEWS_BLOCK else "🟢 OFF"
