@@ -505,7 +505,7 @@ Trades today: {daily_trades.get(user_id, {}).get(now_eat().date(), 0)}/10
                                   types.InlineKeyboardButton("⬅️ Back", callback_data="admin_panel")
                               ), parse_mode='Markdown')
 
-# === START ===
+    # === START ===
 print("Denverlyk V3.4 PICK-A-PAIR Starting...")
 print(f"Bot online: @Denverlykbot")
 print(f"Admin: {ADMIN_ID}")
@@ -514,7 +514,10 @@ print("Scan: User-triggered | 60s cooldown")
 print(f"TwelveData: {'SET' if TWELVE_DATA_KEY else 'MISSING'}")
 print(f"M-Pesa: {MPESA_NUMBER}")
 
-# Set Telegram Menu Button
+# Kill old instances + set menu
+bot.remove_webhook()
+time.sleep(2)  # Wait 2s for Telegram to drop old connection
+
 bot.set_my_commands([
     telebot.types.BotCommand("/start", "🚀 Open main menu"),
     telebot.types.BotCommand("/myid", "🆔 Get your User ID"),
@@ -523,4 +526,4 @@ bot.set_my_commands([
 ])
 
 print("Menu button set")
-bot.infinity_polling()
+bot.infinity_polling(skip_pending=True, timeout=10, long_polling_timeout=5)
