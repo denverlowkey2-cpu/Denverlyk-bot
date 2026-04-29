@@ -189,11 +189,11 @@ def main_menu(user_id):
 
 def pair_menu():
     markup = types.InlineKeyboardMarkup(row_width=2)
-    pairs = [
-        ("🟠 XAUUSD", "XAU/USD"),
-        ("🇪🇺 EURUSD", "EUR/USD"),
-        ("🇬🇧 GBPUSD", "GBP/USD"),
-        ("💻 BTCUSD", "BTC/USD")
+    PAIRS = [
+    'XAUUSD', 'EURUSD', 'GBPUSD', 'BTCUSD',  # Majors + Gold + Crypto
+    'USDJPY', 'AUDUSD', 'US30', 'NAS100',    # JPY, AUD, Indices  
+    'EURJPY', 'GBPJPY', 'USDCAD', 'NZDUSD',  # Crosses
+    'USDCHF', 'EURGBP', 'XAGUSD', 'GER40'    # More crosses + Silver + DAX
     ]
     buttons = [types.InlineKeyboardButton(name, callback_data=f"scan_{sym}") for name, sym in pairs]
     markup.add(*buttons)
