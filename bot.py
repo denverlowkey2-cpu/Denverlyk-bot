@@ -13,6 +13,11 @@ MPESA_NUMBER = os.getenv('MPESA_NUMBER', 'Contact Admin')
 EAT = 3 # GMT+3
 
 bot = telebot.TeleBot(BOT_TOKEN)
+bot.remove_webhook()  # Add this line
+time.sleep(1)         # Add this line
+
+# === DATABASE ===
+subscribers = {}
 
 # === DATABASE ===
 subscribers = {}
