@@ -21,6 +21,7 @@ print("=== ALL IMPORTS DONE ===", flush=True)
 # ===== CONFIG FROM RAILWAY VARIABLES =====
 BOT_TOKEN = os.getenv('BOT_TOKEN', '')
 ADMIN_ID = int(os.getenv('ADMIN_ID', '0'))
+USERS_DATA = {}  
 TD_KEY = os.getenv('TD_KEY')
 SUPPORT_HANDLE = os.getenv('SUPPORT_HANDLE')
 MPESA_NUMBER = os.getenv('MPESA_NUMBER')
