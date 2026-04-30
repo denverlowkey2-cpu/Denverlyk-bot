@@ -470,17 +470,25 @@ def cmd_adduser(message):
     try:
         parts = message.text.split()
         if len(parts) < 3:
-            bot.reply_to(message, "Usage: /adduser @username VIP\nExample: /adduser @denver VIP")
+            bot.reply_to(message, "Usage: /adduser 8552719664 VIP")
             return
 
-        username = parts[1].replace('@', '')
+        user_id = int(parts[1]) # Force it to be a number
         tier = parts[2].upper()
 
-        # Replace this with your actual save logic
-        # Example:
-        # user_data[username] = {'is_vip': tier == 'VIP', 'is_normal': tier == 'NORMAL'}
+        if tier not in ['VIP', 'NORMAL']:
+            bot.reply_to(message, "❌ Tier must be VIP or NORMAL")
+            return
 
-        bot.reply_to(message, f"✅ Added {username} as {tier}")
+        USERS_DATA[user_id] = {
+            'tier': tier,
+            'expiry': datetime.now(timezone.utc) + timedelta(days=7)
+        }
+
+        bot.reply_to(message, f"✅ Added {user_id} as {tier}")
+        print(f"=== SAVED: {USERS_DATA} ===", flush=True)
+    except ValueError:
+        bot.reply_to(message, "❌ User ID must be a number. Example: /adduser 8552719664 VIP")
     except Exception as e:
         print(f"=== ADDUSER ERROR: {e} ===", flush=True)
         bot.reply_to(message, f"Error: {e}")
@@ -492,7 +500,7 @@ def callback_handler(call):
     init_user(user_id, call.from_user.username or call.from_user.first_name)
 
     if call.data == "choose_normal":
-        bot.edit_message_text(NORMAL_MSG, call.message.chat.id, call.message.message_id, parse_mode='Markdown')
+        bot.edit_message_t.id, call.message.message_id, parse_mode='Markdown')
 
     elif call.data == "choose_vip" or call.data == "go_vip":
         bot.edit_message_text(VIP_MSG, call.message.chat.id, call.message.message_id, parse_mode='Markdown')
