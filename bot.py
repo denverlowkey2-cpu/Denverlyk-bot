@@ -500,7 +500,7 @@ def callback_handler(call):
     init_user(user_id, call.from_user.username or call.from_user.first_name)
 
     if call.data == "choose_normal":
-        bot.edit_message_t.id, call.message.message_id, parse_mode='Markdown')
+        bot.edit_message_text(call.message.text, call.message.chat.id, call.message.message_id, parse_mode='Markdown')
 
     elif call.data == "choose_vip" or call.data == "go_vip":
         bot.edit_message_text(VIP_MSG, call.message.chat.id, call.message.message_id, parse_mode='Markdown')
