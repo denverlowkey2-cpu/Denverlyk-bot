@@ -1,12 +1,9 @@
-# force restart
 # force restart - April 30 2026
-print(">>> BOT SCRIPT STARTED <<<")  # add this
-import telebot
+import sys
+print("=== CONTAINER STARTED ===", flush=True)
+
 import os
-TOKEN = os.getenv("BOT_TOKEN")
-print(f">>> TOKEN LOADED: {TOKEN is not None} <<<")  # add this
-bot = telebot.TeleBot(TOKEN)
-import os
+print("=== IMPORTING TELEBOT ===", flush=True)
 import telebot
 from telebot import types
 import requests
@@ -19,14 +16,34 @@ import schedule
 import threading
 import ta
 
+print("=== ALL IMPORTS DONE ===", flush=True)
+
 # ===== CONFIG FROM RAILWAY VARIABLES =====
-BOT_TOKEN = os.getenv('BOT_TOKEN')
+BOT_TOKEN = os.getenv('BOT_TOKEN', '')
 ADMIN_ID = int(os.getenv('ADMIN_ID', '0'))
 TD_KEY = os.getenv('TD_KEY')
 SUPPORT_HANDLE = os.getenv('SUPPORT_HANDLE')
 MPESA_NUMBER = os.getenv('MPESA_NUMBER')
 
+print(f"=== TOKEN LENGTH: {len(BOT_TOKEN)} ===", flush=True)
+print(f"=== TOKEN START: {BOT_TOKEN[:10]}... ===", flush=True)
+
+if not BOT_TOKEN:
+    print("=== ERROR: BOT_TOKEN IS EMPTY ===", flush=True)
+    sys.exit(1)
+
+print("=== CREATING BOT OBJECT ===", flush=True)
 bot = telebot.TeleBot(BOT_TOKEN)
+
+print("=== TESTING BOT.GET_ME ===", flush=True)
+try:
+    me = bot.get_me()
+    print(f"=== BOT USERNAME: @{me.username} ===", flush=True)
+except Exception as e:
+    print(f"=== BOT.GET_ME FAILED: {e} ===", flush=True)
+    sys.exit(1)
+
+print("=== STARTING POLLING ===", flush=True)
 
 # ===== PAIRS =====
 PAIRS = [
