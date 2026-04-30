@@ -788,6 +788,16 @@ def callback_handler(call):
     elif call.data == "choose_vip" or call.data == "go_vip":
         bot.edit_message_text(VIP_MSG, call.message.chat.id, call.message.message_id, parse_mode='Markdown')
 
+    elif call.data == "get_myid":
+        user_id = call.from_user.id
+        username = call.from_user.username or call.from_user.first_name
+        bot.answer_callback_query(call.id)
+        bot.send_message(
+            call.message.chat.id, 
+            f"🆔 *Your Telegram ID*\n\nUser: @{username}\nID: `{user_id}`\n\n*Next steps:*\n1. Copy your ID above\n2. Pay 1000 KSH for Normal OR 2000 KSH for VIP to M-Pesa: `0111510870`\n3. Send ID + payment screenshot to @Denverlyksignalpro\n\nYou'll be activated in 5-10min ✅", 
+            parse_mode='Markdown'
+        )
+        
     elif call.data == "get_signal":
         if not has_access(user_id):
             bot.answer_callback_query(call.id, "❌ Subscription expired. Renew to continue.")
@@ -809,7 +819,7 @@ def callback_handler(call):
         markup.add(types.InlineKeyboardButton("🔙 Back", callback_data="back_menu"))
         markup.add(*buttons)
         bot.edit_message_text("Select pair to scan:", call.message.chat.id, call.message.message_id, reply_markup=markup)
-
+      
     elif call.data == "my_stats":
         is_vip = user_data[user_id]['is_vip'] or uid == ADMIN_ID
         is_normal = user_data[user_id]['is_normal']
