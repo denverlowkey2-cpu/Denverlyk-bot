@@ -421,44 +421,57 @@ def save_signal_to_history(user_id, signal):
     user_data[user_id]['signal_history'] = hist[:5]
     save_data()
 
-# ===== BOT COMMANDS =====
+# ===== BOT COMMANDS ===== #
 @bot.message_handler(commands=['start'])
 def start(message):
-    user_id = str(message.from_user.id)
-    username = message.from_user.username or message.from_user.first_name
-    init_user(user_id, username)
-    check_subscription_expiry(int(user_id))
-
-    if user_data[user_id]['is_vip']:
+    user_id = message.from_user.id
+    print(f"=== /START BY {user_id} ===", flush=True)
+    print(f"=== USERS_DATA: {USERS_DATA} ===", flush=True)
+    
+    # 1. ADMIN CHECK - Runs first
+    if user_id == ADMIN_ID:
+        print(f"=== ADMIN ACCESS FOR {user_id} ===", flush=True)
         markup = types.InlineKeyboardMarkup(row_width=2)
-        btn1 = types.InlineKeyboardButton("🔥 Get Signal", callback_data="get_signal")
-        btn2 = types.InlineKeyboardButton("📊 My Stats", callback_data="my_stats")
-        btn3 = types.InlineKeyboardButton("📈 Last 5 Signals", callback_data="last_signals")
-        btn4 = types.InlineKeyboardButton("⚙️ Settings", callback_data="settings")
-        btn5 = types.InlineKeyboardButton("📞 Support", url=f"https://t.me/{SUPPORT_HANDLE}")
-        markup.add(btn1, btn2, btn3, btn4, btn5)
-
-        expiry = user_data[user_id]['vip_expiry'][:10]
-        bot.send_message(message.chat.id, f"💎 *Welcome back VIP @{username}*\n\nExpires: {expiry}\nScans: Unlimited", parse_mode='Markdown', reply_markup=markup)
-
-    elif user_data[user_id]['is_normal']:
-        markup = types.InlineKeyboardMarkup(row_width=2)
-        btn1 = types.InlineKeyboardButton("🔥 Get Signal", callback_data="get_signal")
-        btn2 = types.InlineKeyboardButton("💎 Upgrade VIP", callback_data="go_vip")
-        btn3 = types.InlineKeyboardButton("📊 My Stats", callback_data="my_stats")
-        btn4 = types.InlineKeyboardButton("📈 Last 5 Signals", callback_data="last_signals")
-        btn5 = types.InlineKeyboardButton("⚙️ Settings", callback_data="settings")
-        markup.add(btn1, btn2, btn3, btn4, btn5)
-
-        expiry = user_data[user_id]['normal_expiry'][:10]
-        scans_left = 10 - user_data[user_id]['scans_today']
-        bot.send_message(message.chat.id, f"💰 *Welcome @{username}*\n\nPlan: Normal\nExpires: {expiry}\nScans left today: {scans_left}/10", parse_mode='Markdown', reply_markup=markup)
-
-    else:
-        markup = types.InlineKeyboardMarkup()
-        markup.add(types.InlineKeyboardButton("💰 Normal - 1000 KSH/week", callback_data="choose_normal"))
-        markup.add(types.InlineKeyboardButton("💎 VIP - 2000 KSH/week", callback_data="choose_vip"))
-        bot.send_message(message.chat.id, START_MSG, parse_mode='Markdown', reply_markup=markup)
+        markup.add(
+            types.InlineKeyboardButton("👥 User Count", callback_data="admin_usercount"),
+            types.InlineKeyboardButton("➕ Add VIP", callback_data="admin_addvip"),
+            types.InlineKeyboardButton("➖ Remove VIP", callback_data="admin_removevip"),
+            types.InlineKeyboardButton("📢 Broadcast", callback_data="admin_broadcast"),
+            types.InlineKeyboardButton("📊 View Signals", callback_data="admin_signals"),
+            types.InlineKeyboardButton("🔥 Bot Stats", callback_data="admin_stats")
+        )
+        bot.send_message(
+            message.chat.id, 
+            f"🔧 *ADMIN PANEL* 🔧\n\nWelcome @Denverlyksignalpro\n\nID: `{user_id}`\nTotal Users: `{len(USERS_DATA)}`",
+            parse_mode='Markdown',
+            reply_markup=markup
+        )
+        return
+    
+    # 2. VIP CHECK
+    if user_id in USERS_DATA:
+        user = USERS_DATA[user_id]
+        expiry = user.get('expiry')
+        
+        if user.get('tier') == 'VIP' and expiry and datetime.now(timezone.utc) < expiry:
+            print(f"=== VIP ACCESS GRANTED FOR {user_id} ===", flush=True)
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            btn1 = types.InlineKeyboardButton("📊 Get Signal", callback_data="get_signal")
+            btn2 = types.InlineKeyboardButton("📈 My Stats", callback_data="my_stats")
+            btn3 = types.InlineKeyboardButton("🕐 Last 5 Signals", callback_data="last_signals")
+            btn4 = types.InlineKeyboardButton("⚙️ Settings", callback_data="settings")
+            markup.add(btn1, btn2, btn3, btn4)
+            
+            expiry_str = expiry.strftime("%d %b %Y")
+            bot.send_message(message.chat.id, f"🔥 *Welcome back VIP @{message.from_user.username}*\n\nExpires: {expiry_str}\nScans: Unlimited", parse_mode='Markdown', reply_markup=markup)
+            return
+    
+    # 3. DEFAULT: Payment page for normal users
+    print(f"=== SHOWING PAYMENT PAGE TO {user_id} ===", flush=True)
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("💰 Normal - 1000 KSH/week", callback_data="choose_normal"))
+    markup.add(types.InlineKeyboardButton("💎 VIP - 2000 KSH/week", callback_data="choose_vip"))
+    bot.send_message(message.chat.id, START_MSG, parse_mode='Markdown', reply_markup=markup)
 
 @bot.message_handler(commands=['adduser'])
 def cmd_adduser(message):
@@ -478,7 +491,7 @@ def cmd_adduser(message):
         tier = parts[2].upper()
 
         if tier not in ['VIP', 'NORMAL']:
-            bot.reply_to(message, "❌ Tier must be VIP or NORMAL")
+            bot.reply_to(message, "❌ Tire must be VIP or NORMAL")
             return
 
         USERS_DATA[user_id] = {
