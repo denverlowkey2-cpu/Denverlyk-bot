@@ -949,20 +949,21 @@ def callback_handler(call):
         cmd_stats(FakeMsg(uid, call.message.chat.id, call.message.message_id))
 
     elif call.data == "admin_panel":
-        bot.answer_callback_query(call.id)
-        markup = types.InlineKeyboardMarkup(row_width=2)
-        markup.add(
-            types.InlineKeyboardButton("📂 List Users", callback_data="admin_listusers"),
-            types.InlineKeyboardButton("➕ Add VIP", callback_data="admin_addvip"),
-            types.InlineKeyboardButton("🔄 Renew VIP", callback_data="admin_renewvip"),
-            types.InlineKeyboardButton("🗑️ Clear Expired", callback_data="admin_clearexpired"),
-            types.InlineKeyboardButton("📢 Broadcast", callback_data="admin_broadcast"),
-            types.InlineKeyboardButton("🔥 Bot Stats", callback_data="admin_stats")
-        )
-        bot.edit_message_text(
-            f"🔧 *ADMIN PANEL* 🔧\n\nWelcome @Denverlyksignalpro\n\nID: `{uid}`\nTotal Users: `{len(USERS_DATA)}`",
-            call.message.chat.id, call.message.message_id, parse_mode='Markdown', reply_markup=markup
-        )
+      bot.answer_callback_query(call.id)
+      markup = types.InlineKeyboardMarkup(row_width=2)
+      markup.add(
+          types.InlineKeyboardButton("📂 List Users", callback_data="admin_listusers"),
+          types.InlineKeyboardButton("➕ Add VIP", callback_data="admin_addvip"),
+          types.InlineKeyboardButton("🔄 Renew VIP", callback_data="admin_renewvip"),
+          types.InlineKeyboardButton("🗑️ Clear Expired", callback_data="admin_clearexpired"),
+          types.InlineKeyboardButton("📢 Broadcast", callback_data="admin_broadcast"),
+          types.InlineKeyboardButton("🔥 Bot Stats", callback_data="admin_stats"),
+          types.InlineKeyboardButton("🔙 Back to Menu", callback_data="back_menu")
+       )
+       bot.edit_message_text(
+           f"🔧 *ADMIN PANEL* 🔧\n\nWelcome @Denverlyksignalpro\n\nID: `{uid}`\nTotal Users: `{len(USERS_DATA)}`",
+           call.message.chat.id, call.message.message_id, parse_mode='Markdown', reply_markup=markup
+   )
 
 # ===== PAYMENT AUTO-DETECTION =====
 @bot.message_handler(content_types=['text', 'photo', 'document'])
