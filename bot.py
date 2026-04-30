@@ -459,6 +459,32 @@ def start(message):
         markup.add(types.InlineKeyboardButton("💎 VIP - 2000 KSH/week", callback_data="choose_vip"))
         bot.send_message(message.chat.id, START_MSG, parse_mode='Markdown', reply_markup=markup)
 
+@bot.message_handler(commands=['adduser'])
+def cmd_adduser(message):
+    print(f"=== /ADDUSER HIT BY {message.from_user.id} ===", flush=True)
+
+    if message.from_user.id!= ADMIN_ID:
+        bot.reply_to(message, "❌ Not admin")
+        return
+
+    try:
+        parts = message.text.split()
+        if len(parts) < 3:
+            bot.reply_to(message, "Usage: /adduser @username VIP\nExample: /adduser @denver VIP")
+            return
+
+        username = parts[1].replace('@', '')
+        tier = parts[2].upper()
+
+        # Replace this with your actual save logic
+        # Example:
+        # user_data[username] = {'is_vip': tier == 'VIP', 'is_normal': tier == 'NORMAL'}
+
+        bot.reply_to(message, f"✅ Added {username} as {tier}")
+    except Exception as e:
+        print(f"=== ADDUSER ERROR: {e} ===", flush=True)
+        bot.reply_to(message, f"Error: {e}")
+
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
     user_id = str(call.from_user.id)
