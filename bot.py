@@ -806,6 +806,7 @@ def callback_handler(call):
 
         markup = types.InlineKeyboardMarkup(row_width=3)
         buttons = [types.InlineKeyboardButton(pair, callback_data=f"scan_{pair}") for pair in PAIRS]
+        markup.add(types.InlineKeyboardButton("🔙 Back", callback_data="back_menu"))
         markup.add(*buttons)
         bot.edit_message_text("Select pair to scan:", call.message.chat.id, call.message.message_id, reply_markup=markup)
 
@@ -842,7 +843,9 @@ def callback_handler(call):
             hours = int((datetime.now() - time_ago).total_seconds() / 3600)
             msg += f"{i}. {sig['pair']} {sig['direction']} {sig['confidence']}% - {hours}h ago\n Entry: {sig['entry']} | Status: Pending 🟡\n\n"
         msg += "_Results update coming soon_"
-        bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='Markdown')
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("🔙 Back", callback_data="back_menu"))
+        bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='Markdown', reply_markup=markup)
 
     elif call.data == "settings":
         if not has_access(user_id):
@@ -880,7 +883,33 @@ def callback_handler(call):
         callback_handler(call)
 
     elif call.data == "back_menu":
-        start(call.message)
+        # FIX: Don't call start(), rebuild menu directly
+        bot.answer_callback_query(call.id)
+        if uid == ADMIN_ID:
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            btn1 = types.InlineKeyboardButton("📊 Get Signal", callback_data="get_signal")
+            btn2 = types.InlineKeyboardButton("📈 My Stats", callback_data="my_stats")
+            btn3 = types.InlineKeyboardButton("🕐 Last 5 Signals", callback_data="last_signals")
+            btn4 = types.InlineKeyboardButton("⚙️ Settings", callback_data="settings")
+            btn5 = types.InlineKeyboardButton("🔧 Admin Panel", callback_data="admin_panel")
+            markup.add(btn1, btn2, btn3, btn4, btn5)
+            bot.edit_message_text(
+                f"🔥 *Welcome Admin @Denverlyksignalpro* 🔧\n\nID: `{uid}`\nAccess: Unlimited\n\nUse signals + manage users below:",
+                call.message.chat.id, call.message.message_id, parse_mode='Markdown', reply_markup=markup
+            )
+        else:
+            # For VIP users
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            btn1 = types.InlineKeyboardButton("📊 Get Signal", callback_data="get_signal")
+            btn2 = types.InlineKeyboardButton("📈 My Stats", callback_data="my_stats")
+            btn3 = types.InlineKeyboardButton("🕐 Last 5 Signals", callback_data="last_signals")
+            btn4 = types.InlineKeyboardButton("⚙️ Settings", callback_data="settings")
+            markup.add(btn1, btn2, btn3, btn4)
+            expiry_str = user_data[user_id]['vip_expiry'][:10] if user_data[user_id]['is_vip'] else "N/A"
+            bot.edit_message_text(
+                f"🔥 *Welcome back VIP*\n\nExpires: {expiry_str}\nScans: Unlimited",
+                call.message.chat.id, call.message.message_id, parse_mode='Markdown', reply_markup=markup
+            )
 
     elif call.data.startswith("scan_"):
         if not has_access(user_id):
@@ -900,13 +929,18 @@ def callback_handler(call):
 
         signal = analyze_pair(pair, is_vip, user_min_conf)
 
+        # FIX: Add back buttons after scan
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("🔄 Scan Again", callback_data="get_signal"))
+        markup.add(types.InlineKeyboardButton("🔙 Main Menu", callback_data="back_menu"))
+
         if signal:
             user_data[user_id]['scans_today'] += 1
             save_signal_to_history(user_id, signal)
             signal_text = format_signal(pair, signal, is_vip)
-            bot.edit_message_text(signal_text, call.message.chat.id, call.message.message_id, parse_mode='Markdown')
+            bot.edit_message_text(signal_text, call.message.chat.id, call.message.message_id, parse_mode='Markdown', reply_markup=markup)
         else:
-            bot.edit_message_text(f"❌ No A+ setup on {pair} right now. We don't force trades.", call.message.chat.id, call.message.message_id)
+            bot.edit_message_text(f"❌ No A+ setup on {pair} right now. We don't force trades.", call.message.chat.id, call.message.message_id, reply_markup=markup)
 
     # Admin panel callbacks - FIXED FakeMsg with message_id
     elif call.data == "admin_listusers":
@@ -963,7 +997,7 @@ def callback_handler(call):
         bot.edit_message_text(
             f"🔧 *ADMIN PANEL* 🔧\n\nWelcome @Denverlyksignalpro\n\nID: `{uid}`\nTotal Users: `{len(USERS_DATA)}`",
             call.message.chat.id, call.message.message_id, parse_mode='Markdown', reply_markup=markup
-        )
+            )
 
 # ===== PAYMENT AUTO-DETECTION =====
 @bot.message_handler(content_types=['text', 'photo', 'document'])
