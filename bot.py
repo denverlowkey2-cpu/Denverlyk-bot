@@ -794,7 +794,7 @@ def cmd_stats(message):
     user_id = message.from_user.id
     print(f"=== /STATS HIT BY {user_id} ===", flush=True)
 
-    if user_id!= ADMIN_ID:
+    if user_id != ADMIN_ID:
         bot.reply_to(message, "❌ Admin only command")
         return
 
@@ -825,7 +825,7 @@ def cmd_stats(message):
             else:
                 expired_vip += 1
 
-       total_vip_ever = active_vip + expired_vip
+    total_vip_ever = active_vip + expired_vip
     churn_rate = (expired_vip / total_vip_ever * 100) if total_vip_ever > 0 else 0
 
     msg = f"""📊 *BOT STATISTICS*
@@ -849,6 +849,7 @@ VIP Conversion: `{(active_vip/total_users*100) if total_users > 0 else 0:.1f}%`
 """
 
     bot.reply_to(message, msg, parse_mode='Markdown')
+    
 
 # ===== CALLBACK HANDLERS =====
 @bot.callback_query_handler(func=lambda call: True)
