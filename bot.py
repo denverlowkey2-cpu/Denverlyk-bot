@@ -1,4 +1,11 @@
 # force restart
+# force restart - April 30 2026
+print(">>> BOT SCRIPT STARTED <<<")  # add this
+import telebot
+import os
+TOKEN = os.getenv("BOT_TOKEN")
+print(f">>> TOKEN LOADED: {TOKEN is not None} <<<")  # add this
+bot = telebot.TeleBot(TOKEN)
 import os
 import telebot
 from telebot import types
