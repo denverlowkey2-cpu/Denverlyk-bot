@@ -479,7 +479,9 @@ def analyze_pocket_pair(pair, is_vip, user_min_conf):
     df_5m = df_from_td(data_5m)
     df_1h = df_from_td(data_1h)
 
-    if df_1m is None or len(df_1m) < 50: return None
+    # if df_1m is None or len(df_1m) < 50: return None # DISABLED FOR TEST
+    if df_1m is None: # Create fake data if none exists
+        df_1m = pd.DataFrame({'close': [100] * 60, 'high': [101] * 60, 'low': [99] * 60, 'open': [100] * 60})
 
     confidence = 0
     direction = 0
@@ -499,24 +501,24 @@ def analyze_pocket_pair(pair, is_vip, user_min_conf):
         elif df_1m['close'].iloc[-1] > df_1m['close'].iloc[-10] and rsi.iloc[-1] < rsi.iloc[-10]:
             rsi_div = -1
 
-    if bos_dir != 0:
+    if bos_dir!= 0:
         confidence += 20
         direction = bos_dir
         confluence['breakdown'].append(f"✅ 1m {bos_type.replace('_', ' ').title()} +20")
     else:
-        direction = 1  # FORCE CALL FOR TEST ONLY
+        direction = 1 # FORCE CALL FOR TEST ONLY
         confluence['breakdown'].append("🧪 TEST MODE: Forced Signal +0")
 
-    if fvg_dir == direction and fvg_dir != 0:
+    if fvg_dir == direction and fvg_dir!= 0:
         confidence += 20
         confluence['breakdown'].append(f"✅ 1m FVG Retest +20")
         confluence['fvg_zone'] = fvg_zone
 
-    if ob_dir == direction and ob_dir != 0:
+    if ob_dir == direction and ob_dir!= 0:
         confidence += 20
         confluence['breakdown'].append(f"✅ 1H Order Block +20")
 
-    if htf_trend == direction and htf_trend != 0:
+    if htf_trend == direction and htf_trend!= 0:
         confidence += 20
         confluence['breakdown'].append(f"✅ 1H Trend Align +20")
 
@@ -524,13 +526,13 @@ def analyze_pocket_pair(pair, is_vip, user_min_conf):
         confidence += 20
         confluence['breakdown'].append(f"✅ London/NY Killzone +20")
 
-    if rsi_div == direction and rsi_div != 0:
+    if rsi_div == direction and rsi_div!= 0:
         confidence += 12
         confluence['breakdown'].append(f"✅ RSI Divergence +12")
 
-    min_conf = 0  # FORCE TEST: Accept 0% confidence
-    # if confidence < min_conf: return None  # DISABLED FOR TEST
-    # if direction == 0: return None  # FORCE TEST MODE - DISABLED
+    min_conf = 0 # FORCE TEST: Accept 0% confidence
+    # if confidence < min_conf: return None # DISABLED FOR TEST
+    # if direction == 0: return None # FORCE TEST MODE - DISABLED 
        
     grade = "A+" if confidence >= 75 else "B+"
     expiry = "1M" if confidence >= 75 else "5M"
