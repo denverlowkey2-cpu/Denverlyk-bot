@@ -520,7 +520,7 @@ def analyze_pocket_pair(pair, is_vip, user_min_conf):
         confluence['breakdown'].append(f"✅ RSI Divergence +12")
 
     min_conf = 60 if not is_vip else 60
-    if confidence < min_conf or direction == 0: return None
+    if direction == 0: return None  # FORCE TEST MODE
 
     grade = "A+" if confidence >= 75 else "B+"
     expiry = "1M" if confidence >= 75 else "5M"
