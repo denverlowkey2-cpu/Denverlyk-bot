@@ -500,36 +500,36 @@ def analyze_pocket_pair(pair, is_vip, user_min_conf):
             rsi_div = -1
 
     if bos_dir!= 0:
-    confidence += 20
-    direction = bos_dir
-    confluence['breakdown'].append(f"✅ 1m {bos_type.replace('_', ' ').title()} +20")
-else:
-    direction = 1  # FORCE CALL FOR TEST ONLY
-    confluence['breakdown'].append("🧪 TEST MODE: Forced Signal +0")
+       confidence += 20
+       direction = bos_dir
+       confluence['breakdown'].append(f"✅ 1m {bos_type.replace('_', ' ').title()} +20")
+   else:
+       direction = 1  # FORCE CALL FOR TEST ONLY
+       confluence['breakdown'].append("🧪 TEST MODE: Forced Signal +0")
 
-if fvg_dir == direction and fvg_dir!= 0:
-    confidence += 20
-    confluence['breakdown'].append(f"✅ 1m FVG Retest +20")
-    confluence['fvg_zone'] = fvg_zone
+   if fvg_dir == direction and fvg_dir!= 0:
+       confidence += 20
+       confluence['breakdown'].append(f"✅ 1m FVG Retest +20")
+       confluence['fvg_zone'] = fvg_zone
 
-if ob_dir == direction and ob_dir!= 0:
-    confidence += 20
-    confluence['breakdown'].append(f"✅ 1H Order Block +20")
+   if ob_dir == direction and ob_dir!= 0:
+       confidence += 20
+       confluence['breakdown'].append(f"✅ 1H Order Block +20")
 
-if htf_trend == direction and htf_trend!= 0:
-    confidence += 20
-    confluence['breakdown'].append(f"✅ 1H Trend Align +20")
+   if htf_trend == direction and htf_trend!= 0:
+       confidence += 20
+       confluence['breakdown'].append(f"✅ 1H Trend Align +20")
 
-if killzone:
-    confidence += 20
-    confluence['breakdown'].append(f"✅ London/NY Killzone +20")
+   if killzone:
+       confidence += 20
+       confluence['breakdown'].append(f"✅ London/NY Killzone +20")
 
-if rsi_div == direction and rsi_div!= 0:
-    confidence += 12
-    confluence['breakdown'].append(f"✅ RSI Divergence +12")
+   if rsi_div == direction and rsi_div!= 0:
+       confidence += 12
+       confluence['breakdown'].append(f"✅ RSI Divergence +12")
 
-min_conf = 60 if not is_vip else 60
-# if direction == 0: return None  # FORCE TEST MODE - DISABLED
+   min_conf = 60 if not is_vip else 60
+   # if direction == 0: return None  # FORCE TEST MODE - DISABLED  
 
     grade = "A+" if confidence >= 75 else "B+"
     expiry = "1M" if confidence >= 75 else "5M"
