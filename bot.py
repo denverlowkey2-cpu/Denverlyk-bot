@@ -503,7 +503,7 @@ def analyze_pocket_pair(pair, is_vip, user_min_conf):
        confidence += 20
        direction = bos_dir
        confluence['breakdown'].append(f"✅ 1m {bos_type.replace('_', ' ').title()} +20")
-   else:
+    else:
        direction = 1  # FORCE CALL FOR TEST ONLY
        confluence['breakdown'].append("🧪 TEST MODE: Forced Signal +0")
 
