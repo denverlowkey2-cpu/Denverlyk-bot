@@ -1347,7 +1347,7 @@ Bot activates in 5-10 mins.
             signal_text = format_pocket_signal(signal, is_vip, is_elite)
             remaining = limit - user_data[user_id]['scans_today']
             footer = f"\n\n_Scans left today: {remaining}_" if limit!= 999 else ""
-            bot.edit_message_text(signal_text + footer, call.message.chat.id, call.message.message_id, parse_mode='Markdown', reply_markup=markup)
+            bot.edit_message_text(signal_text + footer, call.message.chat.id, call.message.message_id, parse_mode=None, reply_markup=markup)
             if signal['grade'] == 'A+':
                 asyncio.run(log_signal_sent(signal['pair'], signal['direction'], signal['confidence'],
                                           signal['entry_time'], signal['df_1m'], signal['confluence']))
