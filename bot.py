@@ -485,7 +485,7 @@ def analyze_pocket_pair(pair, is_vip, user_min_conf):
     direction = 0
     confluence = {'score': 0, 'breakdown': [], 'fvg_zone': None}
 
-        killzone = check_killzone()
+    killzone = check_killzone()
     bos_dir, bos_type = detect_bos_choch(df_1m)
     fvg_dir, fvg_zone = detect_fvg(df_1m)
     ob_dir = detect_order_block(df_1m)
