@@ -745,6 +745,18 @@ def start(message):
     bot.send_message(message.chat.id, START_MSG, parse_mode='Markdown', reply_markup=markup)
 
 # ===== ADMIN COMMANDS =====
+@bot.message_handler(commands=['credits'])
+def check_credits(message):
+    if message.from_user.id!= ADMIN_ID:
+        return
+    url = f"https://api.twelvedata.com/api_usage?apikey={TD_KEY}"
+    try:
+        r = requests.get(url, timeout=5).json()
+        used = r.get('current_usage', 0)
+        bot.reply_to(message, f"📊 *API Usage*\n\nUsed: {used}/800\nLeft: {800-used}\nResets: Midnight UTC", parse_mode='Markdown')
+    except:
+        bot.reply_to(message, "❌ Can't fetch usage")
+
 @bot.message_handler(commands=['adduser'])
 def cmd_adduser(message):
     user_id = message.from_user.id
