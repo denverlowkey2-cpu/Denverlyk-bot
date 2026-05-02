@@ -786,7 +786,7 @@ def callback_handler(call):
         is_normal = user_data[user_id]['is_normal']
         allowed, scans, limit = can_scan_today(user_id)
 
-          if uid == ADMIN_ID:
+        if uid == ADMIN_ID:
             stats = f"📊 *Your Stats*\n\nStatus: ADMIN 🔧\nScans: Unlimited\nAccess: All features\nSignals sent today: {scans}"
         elif is_vip:
             expiry = user_data[user_id]['vip_expiry'][:10]
