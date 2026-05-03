@@ -1330,6 +1330,37 @@ def show_leaderboard(message):
     msg += "\n_Update: Every Sunday_"
     bot.reply_to(message, msg, parse_mode='Markdown')
 
+# ========= TEMP CHANNEL TEST - DELETE AFTER USE =========
+@bot.message_handler(commands=['forcetest'])
+def cmd_forcetest(message):
+    if not is_admin(message.from_user.id): 
+        bot.reply_to(message, "❌ Admin only")
+        return
+    
+    bot.reply_to(message, "🚀 Forcing test signal to channel...")
+    
+    # Create fake A+ signal
+    test_signal = {
+        'signal_id': f'TEST_{int(time.time())}',
+        'pair': 'EURUSD_OTC',
+        'direction': 'CALL',
+        'confidence': 95,
+        'entry_time': get_eat_time(),
+        'expiry': 5,
+        'reasons': ['Order Block + FVG', 'Liquidity Sweep', 'Break of Structure'],
+        'price': 1.08450,
+        'tp': 1.08600,
+        'sl': 1.08300
+    }
+    
+    # Generate a dummy chart so it posts with image
+    try:
+        chart_path = generate_smc_chart(test_signal, pd.DataFrame({'close': [1.084, 1.0845, 1.085]}))
+        post_signal_to_channel(test_signal, chart_path)
+        bot.reply_to(message, f"✅ Test signal posted to {COMMUNITY_CHANNEL}\nCheck your channel now.")
+    except Exception as e:
+        bot.reply_to(message, f"❌ Channel post failed: {str(e)}\n\nCheck:\n1. Bot is admin in channel\n2. COMMUNITY_CHANNEL var is correct")
+
 # ===== CALLBACK HANDLERS =====
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
