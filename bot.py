@@ -1173,16 +1173,24 @@ def cmd_propfirm(message):
         return
 
     user_data[uid]['settings']['prop_mode'] = not user_data[uid]['settings']['prop_mode']
+    
     status = "ON 🛡️" if user_data[uid]['settings']['prop_mode'] else "OFF"
     save_data()
 
+    prop_text = ""
+    if user_data[uid]['settings']['prop_mode']:
+        prop_text = """
+✅ 2% risk lock active
+✅ 1 trade at a time 
+✅ News filter ON
+✅ No trading during high impact
+
+FTMO/MFF compliant"""
+
     bot.reply_to(message, f"""
 🛡️ *Prop Firm Mode: {status}*
-
-{"✅ 2% risk lock active\n✅ 1 trade at a time\n✅ News filter ON\n✅ No trading during high impact" if user_data[uid]['settings']['prop_mode'] else "Disabled. Normal mode active."}
-
-{"FTMO/MFF compliant" if user_data[uid]['settings']['prop_mode'] else ""}
-    """, parse_mode='Markdown')
+{prop_text}
+""", parse_mode='Markdown')
 
 @bot.message_handler(commands=['bet'])
 def cmd_bet(message):
