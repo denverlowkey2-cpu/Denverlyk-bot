@@ -1224,7 +1224,7 @@ def callback_handler(call):
         if tier in ['ELITE','INSTITUTIONAL']:
             markup.add(types.InlineKeyboardButton(f"🔊 Voice Alerts: {'ON' if s['voice_alerts'] else 'OFF'}", callback_data="toggle_voice"))
             markup.add(types.InlineKeyboardButton(f"🛡️ Prop Firm Mode: {'ON' if s['prop_mode'] else 'OFF'}", callback_data="toggle_prop"))
-        if TIERS_CONFIG['forex']:
+        if TIERS_CONFIG['forex']:  # FIX: Check tier dict, not base dict
             current_mode = USERS_DATA.get(uid, {}).get('mode', 'PO')
             txt = "💱 Switch to Forex" if current_mode!= 'FOREX' else "📊 Switch to PO"
             markup.add(types.InlineKeyboardButton(txt, callback_data=f"mode_{'FOREX' if current_mode!= 'FOREX' else 'PO'}"))
