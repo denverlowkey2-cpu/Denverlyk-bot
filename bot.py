@@ -1225,7 +1225,7 @@ def callback_handler(call):
             markup.add(types.InlineKeyboardButton(f"🔊 Voice Alerts: {'ON' if s['voice_alerts'] else 'OFF'}", callback_data="toggle_voice"))
             markup.add(types.InlineKeyboardButton(f"🛡️ Prop Firm Mode: {'ON' if s['prop_mode'] else 'OFF'}", callback_data="toggle_prop"))
         # FIX #1: Added
-        if TIERS_CONFIG['forex']:
+        if TIERS_CONFIG[tier]['forex']:
             current_mode = USERS_DATA.get(uid, {}).get('mode', 'PO')
             txt = "💱 Switch to Forex" if current_mode!= 'FOREX' else "📊 Switch to PO"
             new_mode = 'FOREX' if current_mode!= 'FOREX' else 'PO'
