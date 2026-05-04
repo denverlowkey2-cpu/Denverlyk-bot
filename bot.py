@@ -1271,7 +1271,7 @@ def callback_handler(call):
         callback_handler(call)
 
     elif call.data.startswith("mode_"):
-        if not TIERS_CONFIG['forex']:
+        if not TIERS_CONFIG[tier]['forex']:
             bot.answer_callback_query(call.id, "Upgrade to Advanced for Forex")
             return
         new_mode = call.data.split('_')[1]
