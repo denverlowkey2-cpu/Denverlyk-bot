@@ -502,16 +502,22 @@ def run_scheduler():
 @bot.message_handler(commands=['start'])
 def cmd_start(message):
     try:
-        print(f"=== /START BY {message.from_user.id} ===", flush=True)
+        print(f"1. START CMD TRIGGERED", flush=True)
         user_id = message.from_user.id
         uid_str = str(user_id)
+        print(f"2. USER_ID: {user_id}", flush=True)
         init_user(uid_str, message.from_user.username or message.from_user.first_name)
+        print(f"3. INIT_USER DONE", flush=True)
         sync_vip_status(user_id)
+        print(f"4. SYNC_VIP DONE", flush=True)
         tier = get_user_tier(user_id)
+        print(f"5. TIER: {tier}", flush=True)
         mode = USER_SETTINGS.get(user_id, {}).get('mode', 'PO')
+        print(f"6. MODE: {mode}", flush=True)
         mode_emoji = "📱" if mode == 'PO' else "💹"
 
         if has_access(uid_str):
+            print("7A. USER HAS ACCESS", flush=True)
             markup = types.InlineKeyboardMarkup(row_width=2)
             markup.add(
                 types.InlineKeyboardButton("📊 Pocket Option", callback_data="mode_PO"),
@@ -524,9 +530,11 @@ def cmd_start(message):
             if user_id == ADMIN_ID:
                 markup.add(types.InlineKeyboardButton("🔧 Admin Panel", callback_data="admin_panel"))
             text = f"✅ Welcome back {tier}\n\nMode: {mode.upper()} {mode_emoji}\n\nChoose your market or get a signal:"
+            print("7B. SENDING VIP MENU", flush=True)
             bot.send_message(message.chat.id, text, reply_markup=markup)
-            print("SENT VIP MENU", flush=True)
+            print("7C. SENT VIP MENU SUCCESS", flush=True)
         else:
+            print("7A. USER NO ACCESS", flush=True)
             markup = types.InlineKeyboardMarkup(row_width=2)
             markup.add(types.InlineKeyboardButton("📊 Pocket Option", callback_data="mode_PO"),
                        types.InlineKeyboardButton("💱 Forex Live", callback_data="mode_FOREX"))
@@ -539,18 +547,20 @@ def cmd_start(message):
                 f"📝 Ref: @{message.from_user.username or message.from_user.id}\n"
                 f"📞 Support: {SUPPORT_CONTACT}"
             )
+            print("7B. SENDING STARTER MENU", flush=True)
             bot.send_message(message.chat.id, text, reply_markup=markup)
-            print("SENT STARTER MENU", flush=True)
+            print("7C. SENT STARTER MENU SUCCESS", flush=True)
 
         if int(user_id) == ADMIN_ID:
+            print("8. IS ADMIN", flush=True)
             bot.send_message(message.chat.id, "👑 Admin detected. Running button diagnostics...")
             cmd_testbuttons(message)
     except Exception as e:
-        print(f"cmd_start CRASH: {e}", flush=True)
+        print(f"CRASH: {type(e).__name__}: {e}", flush=True)
         try:
             bot.send_message(message.chat.id, f"❌ Bot error: {str(e)[:200]}")
-        except:
-            print("FAILED TO SEND ERROR MSG", flush=True)
+        except Exception as e2:
+            print(f"FAILED TO SEND ERROR: {e2}", flush=True)
 
 @bot.message_handler(commands=['getsignal'])
 def cmd_getsignal(message):
