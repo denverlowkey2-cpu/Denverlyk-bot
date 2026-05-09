@@ -13,6 +13,9 @@ import schedule
 import io
 from functools import lru_cache
 import logging
+import sys
+sys.stdout.reconfigure(line_buffering=True)  # Force Railway to show prints immediately
+logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 
 # ===== CONFIG =====
 BOT_TOKEN = os.getenv('BOT_TOKEN', 'YOUR_BOT_TOKEN')
