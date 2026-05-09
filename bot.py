@@ -523,27 +523,30 @@ def cmd_start(message):
             )
             if user_id == ADMIN_ID:
                 markup.add(types.InlineKeyboardButton("🔧 Admin Panel", callback_data="admin_panel"))
-            bot.send_message(message.chat.id, f"✅ *Welcome back {tier}*\n\nMode: {mode.upper()} {mode_emoji}\n\nChoose your market or get a signal:", parse_mode='Markdown', reply_markup=markup)
+            text = f"✅ Welcome back {tier}\n\nMode: {mode.upper()} {mode_emoji}\n\nChoose your market or get a signal:"
+            bot.send_message(message.chat.id, text, reply_markup=markup) # NO parse_mode
         else:
             markup = types.InlineKeyboardMarkup(row_width=2)
             markup.add(types.InlineKeyboardButton("📊 Pocket Option", callback_data="mode_PO"),
                        types.InlineKeyboardButton("💱 Forex Live", callback_data="mode_FOREX"))
-            bot.send_message(message.chat.id,
-                             f"👋 *Welcome to SMC ELITE BOT*\n\n"
-                             f"🎁 *Try it free:* `/demo`\n"
-                             f"⚡ 87% of ELITE users started with `/demo`\n\n"
-                             f"Ready to upgrade?\n"
-                             f"💵 Pay via M-Pesa: `{escape_markdown(MPESA_NUMBER)}`\n"
-                             f"📝 Ref: `@{escape_markdown(message.from_user.username or str(message.from_user.id))}`\n"
-                             f"📞 Support: {escape_markdown(SUPPORT_CONTACT)}",
-                             parse_mode='Markdown', reply_markup=markup)
+            # REMOVED ALL MARKDOWN + ESCAPING TO STOP CRASHES
+            text = (
+                f"👋 Welcome to SMC ELITE BOT\n\n"
+                f"🎁 Try it free: /demo\n"
+                f"⚡ 87% of ELITE users started with /demo\n\n"
+                f"Ready to upgrade?\n"
+                f"💵 Pay via M-Pesa: {MPESA_NUMBER}\n"
+                f"📝 Ref: @{message.from_user.username or message.from_user.id}\n"
+                f"📞 Support: {SUPPORT_CONTACT}"
+            )
+            bot.send_message(message.chat.id, text, reply_markup=markup) # NO parse_mode
 
         if int(user_id) == ADMIN_ID:
-            bot.send_message(message.chat.id, "👑 Admin detected. Running button diagnostics...", parse_mode='Markdown')
+            bot.send_message(message.chat.id, "👑 Admin detected. Running button diagnostics...")
             cmd_testbuttons(message)
     except Exception as e:
-        logging.error(f"cmd_start error: {e}", exc_info=True)
-        bot.send_message(message.chat.id, "❌ Error in /start. Check logs.")
+        logging.error(f"cmd_start CRASH: {e}", exc_info=True)
+        bot.send_message(message.chat.id, f"❌ Error: {str(e)[:100]}")
 
 @bot.message_handler(commands=['getsignal'])
 def cmd_getsignal(message):
