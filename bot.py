@@ -502,7 +502,7 @@ def run_scheduler():
 @bot.message_handler(commands=['start'])
 def cmd_start(message):
     try:
-        logging.info(f"=== /START BY {message.from_user.id} ===")
+        print(f"=== /START BY {message.from_user.id} ===", flush=True)
         user_id = message.from_user.id
         uid_str = str(user_id)
         init_user(uid_str, message.from_user.username or message.from_user.first_name)
@@ -524,12 +524,12 @@ def cmd_start(message):
             if user_id == ADMIN_ID:
                 markup.add(types.InlineKeyboardButton("🔧 Admin Panel", callback_data="admin_panel"))
             text = f"✅ Welcome back {tier}\n\nMode: {mode.upper()} {mode_emoji}\n\nChoose your market or get a signal:"
-            bot.send_message(message.chat.id, text, reply_markup=markup) # NO parse_mode
+            bot.send_message(message.chat.id, text, reply_markup=markup)
+            print("SENT VIP MENU", flush=True)
         else:
             markup = types.InlineKeyboardMarkup(row_width=2)
             markup.add(types.InlineKeyboardButton("📊 Pocket Option", callback_data="mode_PO"),
                        types.InlineKeyboardButton("💱 Forex Live", callback_data="mode_FOREX"))
-            # REMOVED ALL MARKDOWN + ESCAPING TO STOP CRASHES
             text = (
                 f"👋 Welcome to SMC ELITE BOT\n\n"
                 f"🎁 Try it free: /demo\n"
@@ -539,14 +539,18 @@ def cmd_start(message):
                 f"📝 Ref: @{message.from_user.username or message.from_user.id}\n"
                 f"📞 Support: {SUPPORT_CONTACT}"
             )
-            bot.send_message(message.chat.id, text, reply_markup=markup) # NO parse_mode
+            bot.send_message(message.chat.id, text, reply_markup=markup)
+            print("SENT STARTER MENU", flush=True)
 
         if int(user_id) == ADMIN_ID:
             bot.send_message(message.chat.id, "👑 Admin detected. Running button diagnostics...")
             cmd_testbuttons(message)
     except Exception as e:
-        logging.error(f"cmd_start CRASH: {e}", exc_info=True)
-        bot.send_message(message.chat.id, f"❌ Error: {str(e)[:100]}")
+        print(f"cmd_start CRASH: {e}", flush=True)
+        try:
+            bot.send_message(message.chat.id, f"❌ Bot error: {str(e)[:200]}")
+        except:
+            print("FAILED TO SEND ERROR MSG", flush=True)
 
 @bot.message_handler(commands=['getsignal'])
 def cmd_getsignal(message):
