@@ -21,7 +21,7 @@ MPESA_NUMBER = os.getenv('MPESA_NUMBER', '0700000000')
 SUPPORT_CONTACT = os.getenv('SUPPORT_HANDLE', '@YourSupport')
 CHANNEL_ID = os.getenv('CHANNEL_ID', '@YourChannel') # <-- SET THIS: @YourChannel or -1001234567890
 
-bot = telebot.TeleBot(BOT_TOKEN, parse_mode='Markdown')
+bot = telebot.TeleBot(BOT_TOKEN)
 logging.basicConfig(level=logging.INFO)
 
 # ===== DATA FILES =====
