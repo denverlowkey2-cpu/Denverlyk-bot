@@ -504,5 +504,6 @@ print("Handlers ready", flush=True)
 
 if __name__ == "__main__":
     print("=== POLLING STARTED ===", flush=True)
-    bot.delete_webhook(drop_pending_updates=True)
-    bot.infinity_polling()
+    bot.delete_webhook(drop_pending_updates=True)  # This line kills conflicts
+    time.sleep(1)
+    bot.infinity_polling(skip_pending=True)
