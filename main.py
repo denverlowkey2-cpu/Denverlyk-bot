@@ -1,5 +1,5 @@
 import sys
-print("=== SMC ELITE UNBEATABLE V3.1 START ===", flush=True)
+print("=== DENVER SMC ELITE V3.1 START ===", flush=True)
 
 import telebot
 from telebot import types
