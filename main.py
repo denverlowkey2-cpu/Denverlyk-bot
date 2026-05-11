@@ -16,7 +16,7 @@ import time
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 ADMIN_ID = int(os.getenv('ADMIN_ID', '0'))
 MPESA_NUMBER = os.getenv('MPESA_NUMBER')
-SUPPORT_CONTACT = os.getenv('SUPPORT_HANDLE'')
+SUPPORT_CONTACT = os.getenv('SUPPORT_HANDLE')
 VIP_CHANNEL = os.getenv('VIP_CHANNEL', '')
 
 bot = telebot.TeleBot(BOT_TOKEN, threaded=False)
