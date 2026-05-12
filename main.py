@@ -104,7 +104,7 @@ def can_scan(uid):
     if uid == ADMIN_ID:
         return True, ""
     if user['loss_streak'] >= 3:
-        wait_min = int(60 - (time.time() - user.get('loss_streak_time', 0)) / 60)) # FIXED SYNTAX
+        wait_min = int(60 - (time.time() - user.get('loss_streak_time', 0)) / 60) # FIXED SYNTAX
         return False, f"Loss protection active. Auto-reset in {wait_min}min."
     if user['tier'] == 'FREE' and user['scans'] >= TIERS['FREE']['scans']:
         return False, f"Daily limit: {TIERS['FREE']['scans']}. Upgrade: /upgrade"
