@@ -322,7 +322,7 @@ def menu(message):
         types.InlineKeyboardButton(f"⚡ Booster Mode {booster}", callback_data='booster'),
         types.InlineKeyboardButton("📊 MT4 Lot Calc", callback_data='mt4'),
         types.InlineKeyboardButton("📈 My Stats", callback_data='stats'),
-        types.InlineKeyboardButton("💬 Support", url=f'https://t.me/{SUPPORT_USERNAME}')
+        types.InlineKeyboardButton("💬 Support", url=f'https://t.me/{SUPPORT_HANDLE}')
     )
 
     bot.send_message(
