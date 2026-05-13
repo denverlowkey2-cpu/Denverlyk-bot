@@ -25,7 +25,7 @@ CALL_DELAY = 8 # 8s = 7-8 calls/min, safe for free plan
 PRICING = {
     'elite': 1500,
     'lite': 700,
-    'booster': 400
+    'booster': 500
 }
 
 CRYPTO_PAIRS = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'ADA', 'DOGE', 'AVAX', 'MATIC', 'DOT']
