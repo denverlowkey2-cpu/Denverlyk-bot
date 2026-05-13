@@ -24,8 +24,8 @@ CALL_DELAY = 8
 # Pricing per tier - weekly
 PRICING = {
     'elite': 1500,
-    'lite': 700,
-    'booster': 400
+    'lite': 800,
+    'booster': 600
 }
 
 CRYPTO_PAIRS = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'ADA', 'DOGE', 'AVAX', 'MATIC', 'DOT']
