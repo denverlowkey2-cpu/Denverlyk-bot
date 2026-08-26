@@ -1018,7 +1018,7 @@ def get_live_price(pair):
     return None
 
 def trade_settler():
-    print("Settler V22.8.13 ALL FIXED VNS KEPT RUNNING")
+    print("Settler V22.8.13 FIXED - WIN/LOSS NOW SENDS")
     while True:
         try:
             time.sleep(20)
@@ -1032,7 +1032,6 @@ def trade_settler():
                         kl = get_binance_klines(pair, "1m", 3) or get_klines(pair, "1m", 3)
                         if kl: live = float(kl[-1][4])
                     if not live: continue
-                    if abs(live-entry)/entry*100 < 0.0005: continue
                     win = (direction=="BUY" and live>entry) or (direction=="SELL" and live<entry)
                     stake_f = float(stake) if stake else 2.0
                     fixed_profit = stake_f*1.9 if win else -stake_f
