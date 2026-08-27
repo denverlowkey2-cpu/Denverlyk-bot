@@ -215,7 +215,14 @@ def get_klines(s,i='5min',l=80):
             return None
         return get_twelvedata_klines(s,i,l)
     except: return None
-    def check_news_spike(klines):
+
+def check_news_spike(klines):
+    try:
+        atr=np.mean([float(k[2])-float(k[3]) for k in klines[-14:]]); last_body=abs(float(klines[-1][4])-float(klines[-1][1]))
+        return last_body > atr*2.8
+    except: return False    
+
+def check_news_spike(klines):
     try:
         atr=np.mean([float(k[2])-float(k[3]) for k in klines[-14:]]); last_body=abs(float(klines[-1][4])-float(klines[-1][1]))
         return last_body > atr*2.8
