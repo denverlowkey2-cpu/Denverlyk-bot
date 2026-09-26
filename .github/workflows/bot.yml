@@ -30,6 +30,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests pytz psycopg2-binary matplotlib numpy pandas pyTelegramBotAPI Flask gTTS
 
+            - name: Check database settings
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python -c "import os; from urllib.parse import urlparse; u=urlparse(os.environ['DATABASE_URL']); print('Username:',u.username); print('Host:',u.hostname); print('Port:',u.port); print('Database:',u.path); print('Password present:',bool(u.password)); print('Password length:',len(u.password or ''))"
+      
       - name: Run Vortexdomain bot
         env:
           TOKEN: ${{ secrets.TOKEN }}
