@@ -15,6 +15,24 @@ jobs:
         with:
           python-version: '3.10'
       - run: pip install requests pytz psycopg2-binary matplotlib numpy pandas pyTelegramBotAPI Flask gTTS python-dotenv
+            - name: Check database connection settings
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.parse import urlparse
+
+          url = urlparse(os.environ["DATABASE_URL"])
+
+          print("Scheme:", url.scheme)
+          print("Username:", url.username)
+          print("Host:", url.hostname)
+          print("Port:", url.port)
+          print("Database:", url.path)
+          print("Password present:", bool(url.password))
+          print("Password length:", len(url.password or ""))
+          PY
       - run: python bot.py
         env:
           TOKEN: ${{ secrets.TOKEN }}
