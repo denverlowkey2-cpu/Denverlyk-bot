@@ -1,42 +1,41 @@
+
 name: Keep Bot Alive
+
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
-  schedule:
-    - cron: '0 */5 * * *'
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: vortexdomain-telegram-bot
+  cancel-in-progress: true
+
 jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 350
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-      - run: pip install requests pytz psycopg2-binary matplotlib numpy pandas pyTelegramBotAPI Flask gTTS python-dotenv
-            - name: Check database connection settings
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          python-version: "3.10"
+
+      - name: Install dependencies
         run: |
-          python - <<'PY'
-          import os
-          from urllib.parse import urlparse
+          python -m pip install --upgrade pip
+          pip install requests pytz psycopg2-binary matplotlib numpy pandas pyTelegramBotAPI Flask gTTS
 
-          url = urlparse(os.environ["DATABASE_URL"])
-
-          print("Scheme:", url.scheme)
-          print("Username:", url.username)
-          print("Host:", url.hostname)
-          print("Port:", url.port)
-          print("Database:", url.path)
-          print("Password present:", bool(url.password))
-          print("Password length:", len(url.password or ""))
-          PY
-      - run: python bot.py
+      - name: Run Vortexdomain bot
         env:
           TOKEN: ${{ secrets.TOKEN }}
           ADMIN_ID: ${{ secrets.ADMIN_ID }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           TWELVEDATA_KEYS: ${{ secrets.TWELVEDATA_KEYS }}
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+        run: python -u bot.py
+        
