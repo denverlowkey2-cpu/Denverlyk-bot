@@ -1175,7 +1175,7 @@ def trade_settler():
             time.sleep(10)
             conn = get_db()
             cur = conn.cursor()
-                        cur.execute("""
+            cur.execute("""
                 SELECT id, user_id, pair, direction, entry_price, expiry, tf, stake
                 FROM active_trades
                 ORDER BY id ASC
