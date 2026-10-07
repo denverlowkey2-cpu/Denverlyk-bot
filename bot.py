@@ -1176,12 +1176,39 @@ def trade_settler():
             conn = get_db()
             cur = conn.cursor()
             cur.execute("""
-                SELECT id, user_id, pair, direction, entry_price, expiry, tf, stake
-                FROM active_trades
-                WHERE expiry <= (CURRENT_TIMESTAMP)
-                ORDER BY expiry ASC
-            """)
-            rows = cur.fetchall()
+    SELECT id, user_id, pair, direction, entry_price, expiry, tf, stake
+    FROM active_trades
+    ORDER BY id ASC
+""")
+all_rows = cur.fetchall()
+
+now_eat = datetime.now(EAT)
+rows = []
+
+for row in all_rows:
+    try:
+        expiry_raw = row[5]
+
+        if isinstance(expiry_raw, datetime):
+            expiry_dt = expiry_raw
+        else:
+            expiry_text = str(expiry_raw).strip()
+
+            if expiry_text.endswith("Z"):
+                expiry_text = expiry_text[:-1] + "+00:00"
+
+            expiry_dt = datetime.fromisoformat(expiry_text)
+
+        if expiry_dt.tzinfo is None:
+            expiry_dt = EAT.localize(expiry_dt)
+        else:
+            expiry_dt = expiry_dt.astimezone(EAT)
+
+        if expiry_dt <= now_eat:
+            rows.append(row)
+
+    except Exception as expiry_err:
+        print(f"[SETTLER] Invalid expiry for trade={row[0]}: {expiry_err}")
 
             for tid, uid, pair, direction, entry, expiry, tf, stake in rows:
                 try:
